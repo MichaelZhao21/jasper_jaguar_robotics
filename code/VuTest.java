@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
+import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
@@ -22,6 +23,7 @@ import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocaliz
 import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer.CameraDirection.FRONT;
 
 @TeleOp(name="VuTest")
+
 public class VuTest extends LinearOpMode{
 
     private static final String VUFORIA_KEY = "AW43gwP/////AAAAmYhyz/zuEEVHnvzoxHlLyZItf4ilP0/dinBMnTUxXLYeVNLMHQmuS0m+8deBPobAQUB6JXl9rH3l3VC6eJQdYCL7ucXcYRzIaySgu5Edw18foo+xbQpFci4D7t/gEPkx5bkW8OsMCN8oaHnjJfDsm2yuE7YGWzmDs4NRIi929mQxrBk7BFxhDpDV97bGssofJZ16mCAaBgeIj+IUtW2RfZZ9QNOQRs0l0Nlf6vaFtI8/alOhJPjwpQc9ZXmyjF8Yc83mSOKLW8ei3UsYTzrAlZtYeHPiG4FHuGx6t/OCuN5z3V4sw06bvt7Hi9eYa2MivKl8GXlKppNt6kUPHRNFTVz11vboZTYAAAzafNiXyfNj";
@@ -40,6 +42,50 @@ public class VuTest extends LinearOpMode{
         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
         parameters.vuforiaLicenseKey = VUFORIA_KEY ;
         parameters.cameraDirection   = CAMERA_CHOICE;
+
+        List<VuforiaTrackable> allTrackables = getTargets(parameters);
+        allTrackables = setPhone(allTrackables, parameters);
+
+        waitForStart();
+
+        while (opModeIsActive()) {
+            targetVisible = false;
+            for (VuforiaTrackable trackable : allTrackables) {
+                if (((VuforiaTrackableDefaultListener)trackable.getListener()).isVisible()) {
+                    telemetry.addData("Visible Target", trackable.getName());
+                    targetVisible = true;
+
+                    // getUpdatedRobotLocation() will return null if no new information is available since
+                    // the last time that call was made, or if the trackable is not currently visible.
+                    OpenGLMatrix robotLocationTransform = ((VuforiaTrackableDefaultListener)trackable.getListener()).getUpdatedRobotLocation();
+                    if (robotLocationTransform != null) {
+                        lastLocation = robotLocationTransform;
+                    }
+                    break;
+                }
+            }
+
+            // Provide feedback as to where the robot is located (if we know).
+            if (targetVisible) {
+                // express position (translation) of robot in inches.
+                VectorF translation = lastLocation.getTranslation();
+                telemetry.addData("Pos (in)", "{X, Y, Z} = %.1f, %.1f, %.1f",
+                        translation.get(0) / mmPerInch, translation.get(1) / mmPerInch, translation.get(2) / mmPerInch);
+
+                // express the rotation of the robot in degrees.
+                Orientation rotation = Orientation.getOrientation(lastLocation, EXTRINSIC, XYZ, DEGREES);
+                telemetry.addData("Rot (deg)", "{Roll, Pitch, Heading} = %.0f, %.0f, %.0f", rotation.firstAngle, rotation.secondAngle, rotation.thirdAngle);
+            }
+            else {
+                telemetry.addData("Visible Target", "none");
+            }
+            telemetry.update();
+        }
+    }
+
+    //Gets all of the Navigational Targets and puts it into an array
+    private List<VuforiaTrackable> getTargets(VuforiaLocalizer.Parameters parameters) {
+
         vuforia = ClassFactory.getInstance().createVuforia(parameters);
 
         VuforiaTrackables targetsRoverRuckus = this.vuforia.loadTrackablesFromAsset("RoverRuckus");
@@ -72,7 +118,13 @@ public class VuTest extends LinearOpMode{
                 .multiplied(Orientation.getRotationMatrix(EXTRINSIC, XYZ, DEGREES, 90, 0, -90));
         backSpace.setLocation(backSpaceLocationOnField);
 
-        final int CAMERA_FORWARD_DISPLACEMENT  = 110;   // eg: Camera is 110 mm in front of robot center
+        return allTrackables;
+
+    }
+
+    public List<VuforiaTrackable> setPhone(List<VuforiaTrackable> allTrackables, VuforiaLocalizer.Parameters parameters) {
+
+        final int CAMERA_FORWARD_DISPLACEMENT  = 0;   // eg: Camera is 110 mm in front of robot center
         final int CAMERA_VERTICAL_DISPLACEMENT = 200;   // eg: Camera is 200 mm above ground
         final int CAMERA_LEFT_DISPLACEMENT     = 0;     // eg: Camera is ON the robot's center line
 
@@ -86,6 +138,7 @@ public class VuTest extends LinearOpMode{
             ((VuforiaTrackableDefaultListener)trackable.getListener()).setPhoneInformation(phoneLocationOnRobot, parameters.cameraDirection);
         }
 
+        return allTrackables;
 
     }
 }
