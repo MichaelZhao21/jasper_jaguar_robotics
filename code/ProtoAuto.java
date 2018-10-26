@@ -14,6 +14,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefau
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.firstinspires.ftc.robotcore.external.navigation.AngleUnit.DEGREES;
@@ -23,6 +24,16 @@ import static org.firstinspires.ftc.robotcore.external.navigation.AxesReference.
 import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer.CameraDirection.BACK;
 import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer.CameraDirection.FRONT;
 
+/**
+ *
+ * OpenGLMatrix:
+ * If you are standing in the Red Alliance Station looking towards the center of the field,
+ *     - The X axis runs from your left to the right. (positive from the center to the right)
+ *     - The Y axis runs from the Red Alliance Station towards the other side of the field
+ *       where the Blue Alliance Station is. (Positive is from the center, towards the BlueAlliance station)
+ *     - The Z axis runs from the floor, upwards towards the ceiling.  (Positive is above the floor)
+ *
+ */
 @Autonomous(name="ProtoAuto")
 public class ProtoAuto extends LinearOpMode{
 
@@ -34,10 +45,10 @@ public class ProtoAuto extends LinearOpMode{
     private OpenGLMatrix lastLocation = null;
     private boolean targetVisible = false;
     VuforiaLocalizer vuforia;
+    private DcMotor Motor0;
     private DcMotor Motor1;
     private DcMotor Motor2;
     private DcMotor Motor3;
-    private DcMotor Motor4;
     private DcMotor LiftMotor;
 
     public void runOpMode() {
@@ -95,6 +106,13 @@ public class ProtoAuto extends LinearOpMode{
             ((VuforiaTrackableDefaultListener)trackable.getListener()).setPhoneInformation(phoneLocationOnRobot, parameters.cameraDirection);
         }
 
+        Motor0 = hardwareMap.dcMotor.get("Motor0");
+        Motor1 = hardwareMap.dcMotor.get("Motor1");
+        Motor2 = hardwareMap.dcMotor.get("Motor2");
+        Motor3 = hardwareMap.dcMotor.get("Motor3");
+        Motor3.setDirection(DcMotor.Direction.REVERSE);
+        LiftMotor = hardwareMap.dcMotor.get("LiftMotor");
+
         telemetry.addData(">", "Press Play to start tracking");
         telemetry.update();
         waitForStart();
@@ -103,12 +121,48 @@ public class ProtoAuto extends LinearOpMode{
 
         getPos(allTrackables);
 
-        //land and move out
+        //land, move out, and face vuforia
+        LiftMotor.setPower(-.7);
+        sleep(4000);
+        LiftMotor.setPower(0);
+
+        move(0.2,0, 1, 0);
+        sleep(500);
+        stopMove();
+
         LiftMotor.setPower(.7);
+        move(0.2,1,0, 0);
+        sleep(200);
+        stopMove();
+        sleep(1000);
+        move(.3, 0,0,1);
+        sleep(2800);
+        LiftMotor.setPower(0);
+
+        //Find vuforia, get current position, and move into sampling position
+
+        int count = 0;
+        ArrayList<Float> pos = new ArrayList<>(Arrays.asList(1000f,0f,0f,0f,0f,0f)); //x, y, z, roll, pitch, heading
+        while(count < 100 && pos.get(0) == 1000) {
+            pos = getPos(allTrackables);
+            count++;
+        }
+
+        stopMove();
+
+        //Move along the path and scan the minerals; if found, push it off; if not knock the last one off
+
     }
 
-    private void getPos(List<VuforiaTrackable> allTrackables) {
+    /**
+     * Scans for a viewmark, and if it sees one, tells you the x,y,z,roll,pitch,heading of the robot
+     *
+     * @param allTrackables is the array that holds all of the picture objects
+     * @return targetVisible if the target is visible
+     */
+    private ArrayList<Float> getPos(List<VuforiaTrackable> allTrackables) {
 
+        ArrayList<Float> pos = new ArrayList<>();
         // check all the trackable target to see which one (if any) is visible.
         targetVisible = false;
         for (VuforiaTrackable trackable : allTrackables) {
@@ -132,20 +186,67 @@ public class ProtoAuto extends LinearOpMode{
             VectorF translation = lastLocation.getTranslation();
             telemetry.addData("Pos (in)", "{X, Y, Z} = %.1f, %.1f, %.1f",
                     translation.get(0) / mmPerInch, translation.get(1) / mmPerInch, translation.get(2) / mmPerInch);
-
+            pos.add(translation.get(0) / mmPerInch);
+            pos.add(translation.get(1) / mmPerInch);
+            pos.add(translation.get(2) / mmPerInch);
             // express the rotation of the robot in degrees.
             Orientation rotation = Orientation.getOrientation(lastLocation, EXTRINSIC, XYZ, DEGREES);
             telemetry.addData("Rot (deg)", "{Roll, Pitch, Heading} = %.0f, %.0f, %.0f", rotation.firstAngle, rotation.secondAngle, rotation.thirdAngle);
+            pos.add(rotation.firstAngle);
+            pos.add(rotation.secondAngle);
+            pos.add(rotation.thirdAngle);
         }
         else {
             telemetry.addData("Visible Target", "none");
+            return new ArrayList<>(Arrays.asList(1000.0f,0.0f,0.0f,0.0f,0.0f,0.0f));
         }
+        telemetry.update();
+        return pos;
+    }
+
+    /**
+     * Logs "caption:value" to the phone
+     *
+     * @param caption before the value
+     * @param value that is displayed
+     */
+    private void tele(String caption, String value) {
+        telemetry.addData(caption, value);
         telemetry.update();
     }
 
-    private void move(double speed, int dx, int dy) {
-        float M1 = dy - dx;
-        float M2 = dy + dx;
+    /**
+     * The move function makes the robot move or pivot
+     *
+     * @param speed how fast the robot moves
+     * @param dx change in x
+     * @param dy change in y
+     * @param pivot 0 means it moves normally, 1 = left turn, -1 = right turn
+     */
+    private void move(double speed, double dx, double dy, int pivot) {
+        if (pivot == 0) {
+            float M1 = (float)(dy - dx);
+            float M2 = (float)(dy + dx);
+            Motor0.setPower((M1) * speed);
+            Motor1.setPower((M2) * speed);
+            Motor2.setPower((-M1) * speed);
+            Motor3.setPower((-M2) * speed);
+        }
+        else {
+            pivot *= speed;
+            Motor0.setPower(pivot);
+            Motor1.setPower(pivot);
+            Motor2.setPower(pivot);
+            Motor3.setPower(pivot);
+            tele("pivot", Integer.toString(pivot));
+        }
+    }
+
+    /**
+     * stops movement
+     */
+    private void stopMove() {
+        move(0,0,0,0);
     }
 
 }
