@@ -34,21 +34,21 @@ public class AutoTest extends LinearOpMode{
     private OpenGLMatrix lastLocation = null;
     private boolean targetVisible = false;
     VuforiaLocalizer vuforia;
+    private DcMotor Motor0;
     private DcMotor Motor1;
     private DcMotor Motor2;
     private DcMotor Motor3;
-    private DcMotor Motor4;
     private DcMotor LiftMotor;
 
     @Override public void runOpMode() {
 
         //Get all motors and initiate speed variable
         double speed = 0.8;
+        Motor0 = hardwareMap.dcMotor.get("Motor0");
         Motor1 = hardwareMap.dcMotor.get("Motor1");
         Motor2 = hardwareMap.dcMotor.get("Motor2");
         Motor3 = hardwareMap.dcMotor.get("Motor3");
-        Motor4 = hardwareMap.dcMotor.get("Motor4");
-        Motor4.setDirection(DcMotor.Direction.REVERSE);
+        Motor3.setDirection(DcMotor.Direction.REVERSE);
         LiftMotor = hardwareMap.dcMotor.get("LiftMotor");
 
         //initialize all vuforia and openglmatrix
@@ -129,10 +129,10 @@ public class AutoTest extends LinearOpMode{
             }
             else {
 
-                Motor1.setPower((M1) * speed);
-                Motor2.setPower((M2) * speed);
-                Motor3.setPower((-M1) * speed);
-                Motor4.setPower((-M2) * speed);
+                Motor0.setPower((M1) * speed);
+                Motor1.setPower((M2) * speed);
+                Motor2.setPower((-M1) * speed);
+                Motor3.setPower((-M2) * speed);
 
             }
 
@@ -145,7 +145,7 @@ public class AutoTest extends LinearOpMode{
             }
 
             //Lifting arm
-            LiftMotor.setPower(-gamepad2.left_stick_y * .7);
+            LiftMotor.setPower(gamepad2.left_stick_y * .7);
 
             // check all the trackable target to see which one (if any) is visible.
             targetVisible = false;
@@ -184,10 +184,10 @@ public class AutoTest extends LinearOpMode{
 
     private void pivot(float target, double multiplier){
 
+        Motor0.setPower(target * multiplier);
         Motor1.setPower(target * multiplier);
         Motor2.setPower(target * multiplier);
         Motor3.setPower(target * multiplier);
-        Motor4.setPower(target * multiplier);
 
     }
 
