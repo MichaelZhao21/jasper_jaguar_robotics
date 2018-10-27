@@ -59,7 +59,6 @@ public class ProtoAuto extends LinearOpMode{
 
         parameters.vuforiaLicenseKey = VUFORIA_KEY ;
         parameters.cameraDirection   = CAMERA_CHOICE;
-
         vuforia = ClassFactory.getInstance().createVuforia(parameters);
 
         VuforiaTrackables targetsRoverRuckus = this.vuforia.loadTrackablesFromAsset("RoverRuckus");
@@ -126,16 +125,16 @@ public class ProtoAuto extends LinearOpMode{
         sleep(4000);
         LiftMotor.setPower(0);
 
-        move(0.2,0, 1, 0);
+        move(0.2,0,1,0);
         sleep(500);
         stopMove();
 
         LiftMotor.setPower(.7);
-        move(0.2,1,0, 0);
+        move(0.2,1,0,0);
         sleep(200);
         stopMove();
         sleep(1000);
-        move(.3, 0,0,1);
+        move(0.3,0,0,1);
         sleep(2800);
         LiftMotor.setPower(0);
 
@@ -221,9 +220,9 @@ public class ProtoAuto extends LinearOpMode{
      * @param speed how fast the robot moves
      * @param dx change in x
      * @param dy change in y
-     * @param pivot 0 means it moves normally, 1 = left turn, -1 = right turn
+     * @param pivot 0 means it moves normally, 1 = counterclockwise, -1 = clockwise
      */
-    private void move(double speed, double dx, double dy, int pivot) {
+    private void move(double speed, double dx, double dy, double pivot) {
         if (pivot == 0) {
             float M1 = (float)(dy - dx);
             float M2 = (float)(dy + dx);
@@ -238,7 +237,7 @@ public class ProtoAuto extends LinearOpMode{
             Motor1.setPower(pivot);
             Motor2.setPower(pivot);
             Motor3.setPower(pivot);
-            tele("pivot", Integer.toString(pivot));
+            tele("pivot", Double.toString(pivot));
         }
     }
 
