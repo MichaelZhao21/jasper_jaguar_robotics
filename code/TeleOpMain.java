@@ -95,6 +95,7 @@ public class TeleOpMain extends LinearOpMode{
                 }
 
                 ArmMotor.setPower(gamepad2.right_stick_y * .2);
+                
                 if (gamepad2.left_bumper) {
                     LeftSweep.setPower(-1.0);
                     RightSweep.setPower(1.0);
