@@ -1,7 +1,7 @@
 ### Driver Controls
  **Please don't swing to mineral arm up in people's faces and don't touch the remotes while omeone ons fixing the robots. Also don't break the ports.**
- #### Wheel Movement
-  ##### Entering Driver mode
+ #### Movement Controller
+  ##### Entering Movement mode
  Press `Start` + `A` to enter Driver mode
 
  ##### Controls
@@ -11,8 +11,8 @@
  - Press the `Left Trigger` to rotate the robot left
  - Press the `Right Trigger` to rotate the robot right
  
-#### Arm movement
-##### Entering Arm mode
+#### Function Controller
+##### Entering Function mode
  Press `Start` + `B` to enter Arm mode
 ###### *Pressing `X` sets the controller to move the mineral arms, Pressing `Y` sets the controller to move the lift motor
 ##### Controls
