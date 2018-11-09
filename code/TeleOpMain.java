@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.Range;
 
@@ -16,11 +15,9 @@ public class TeleOpMain extends LinearOpMode{
     private DcMotor LiftMotor;
     private DcMotor ArmMotor;
     private DcMotor FlipMotor;
-    private CRServo LeftSweep;
-    private CRServo RightSweep;
 
     @Override
-    public void runOpMode() {
+    public void runOpMode() throws InterruptedException{
 
         int mode = 0; //0(x): Pickup Minerals, 1(y): Lift Robot
         double speed = 0.5;
@@ -32,8 +29,6 @@ public class TeleOpMain extends LinearOpMode{
         LiftMotor = hardwareMap.dcMotor.get("LiftMotor");
         ArmMotor = hardwareMap.dcMotor.get("ArmMotor");
         FlipMotor = hardwareMap.dcMotor.get("FlipMotor");
-        LeftSweep = hardwareMap.crservo.get("LeftSweep");
-        RightSweep = hardwareMap.crservo.get("RightSweep");
 
         waitForStart();
 
@@ -77,33 +72,18 @@ public class TeleOpMain extends LinearOpMode{
                 mode = 1;
             }
 
-
-            final double thresholdValue = .2;
+            //Switch between
             if (mode == 0) {
                 //Mineral Pickup arm
-                if (-gamepad2.left_stick_y > 0) {
-                    FlipMotor.setPower(Range.clip(-gamepad2.left_stick_y * .4, thresholdValue, 1));
+                if (-gamepad2.right_stick_y > 0) {
+                    FlipMotor.setPower(-gamepad2.right_stick_y * .5); //up
                 }
-                else if (-gamepad2.left_stick_y < 0) {
-                    FlipMotor.setPower(-gamepad2.left_stick_y * .4);
-                }
-                else if (gamepad2.left_stick_button) {
-                    FlipMotor.setPower(thresholdValue);
-                }
-                else {
-                    FlipMotor.setPower(0);
+                else{
+                    FlipMotor.setPower(-gamepad2.right_stick_y * .3); //down
                 }
 
-                ArmMotor.setPower(gamepad2.right_stick_y * .2);
-                
-                if (gamepad2.left_bumper) {
-                    LeftSweep.setPower(-1.0);
-                    RightSweep.setPower(1.0);
-                }
-                else {
-                    LeftSweep.setPower(0);
-                    RightSweep.setPower(0);
-                }
+                ArmMotor.setPower(gamepad2.left_stick_y * .2);
+
             }
             else {
                 //Robot lifting arm
