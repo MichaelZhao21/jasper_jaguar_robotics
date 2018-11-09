@@ -8,13 +8,13 @@ import com.qualcomm.robotcore.util.Range;
 @TeleOp(name="TeleOpMain")
 public class TeleOpMain extends LinearOpMode{
 
-    private DcMotor Motor0;
-    private DcMotor Motor1;
-    private DcMotor Motor2;
-    private DcMotor Motor3;
-    private DcMotor LiftMotor;
-    private DcMotor ArmMotor;
-    private DcMotor FlipMotor;
+    private DcMotor Motor0; //Front Right Wheel Motor
+    private DcMotor Motor1; //Back Right Wheel Motor
+    private DcMotor Motor2; //Back Left Wheel Motor
+    private DcMotor Motor3; //Front Left Wheel Motor
+	private DcMotor ArmMotor; //Mineral Arm Up/Down Motor
+	private DcMotor FlipMotor; //Mineral Arm Rotation Motor
+	private DcMotor LiftMotor; //Robot Up/Down Motor
 
     @Override
     public void runOpMode() throws InterruptedException{
@@ -27,14 +27,14 @@ public class TeleOpMain extends LinearOpMode{
         Motor3 = hardwareMap.dcMotor.get("Motor3");
         Motor3.setDirection(DcMotor.Direction.REVERSE);
         LiftMotor = hardwareMap.dcMotor.get("LiftMotor");
+		FlipMotor = hardwareMap.dcMotor.get("FlipMotor");
         ArmMotor = hardwareMap.dcMotor.get("ArmMotor");
-        FlipMotor = hardwareMap.dcMotor.get("FlipMotor");
 
         waitForStart();
 
         while (opModeIsActive()) {
 
-            //drive code
+            //Drive Code
             float M1 = gamepad1.left_stick_y - gamepad1.left_stick_x;
             float M2 = gamepad1.left_stick_y + gamepad1.left_stick_x;
 
@@ -56,7 +56,7 @@ public class TeleOpMain extends LinearOpMode{
 
             }
 
-            //Fast/slow modes
+            //Changing Wheel Speeds
             if (gamepad1.dpad_up) {
                 speed = 0.5;
             }
@@ -64,7 +64,7 @@ public class TeleOpMain extends LinearOpMode{
                 speed = 0.2;
             }
 
-            //change arm mode bw Lifting Arm and Mineral Pickup Arm
+            //Changing Secondary Arm Modes
             if (gamepad2.x) {
                 mode = 0;
             }
@@ -72,17 +72,17 @@ public class TeleOpMain extends LinearOpMode{
                 mode = 1;
             }
 
-            //Switch between
+            //Arm Movement Code
             if (mode == 0) {
                 //Mineral Pickup arm
                 if (-gamepad2.right_stick_y > 0) {
-                    FlipMotor.setPower(-gamepad2.right_stick_y * .5); //up
+                    FlipMotor.setPower(-gamepad2.right_stick_y * .5); //Rotate Up
                 }
                 else{
-                    FlipMotor.setPower(-gamepad2.right_stick_y * .3); //down
+                    FlipMotor.setPower(-gamepad2.right_stick_y * .3); //Rotate Down
                 }
 
-                ArmMotor.setPower(gamepad2.left_stick_y * .2);
+                ArmMotor.setPower(gamepad2.left_stick_y * .2); //Move Arm Up/Down
 
             }
             else {
