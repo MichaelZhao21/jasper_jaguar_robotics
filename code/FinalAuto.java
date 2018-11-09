@@ -36,10 +36,10 @@ public class FinalAuto extends LinearOpMode{
     private static final VuforiaLocalizer.CameraDirection CAMERA_CHOICE = BACK;
     private OpenGLMatrix lastLocation = null;
     private boolean targetVisible = false;
-    VuforiaLocalizer vuforia;
-    List<VuforiaTrackable> allTrackables;
-    String currentTarget;
-    ArrayList<Float> pos;
+    private VuforiaLocalizer vuforia;
+    private List<VuforiaTrackable> allTrackables;
+    private String currentTarget;
+    private ArrayList<Float> pos = new ArrayList<Float>();
 
     private DcMotor Motor0;
     private DcMotor Motor1;
@@ -72,41 +72,39 @@ public class FinalAuto extends LinearOpMode{
 
         //land right wheels from lander
         LiftMotor.setPower(-.7);
-        sleep(4000);
+        sleep(4750);
         LiftMotor.setPower(0);
-
-        //Move so that both wheels touch the ground
-        move(0.2, 0,1,0);
-        sleep(2000);
-        stopMove();
 
         //move holding peg away from hook
         move(0.2,0, -1, 0);
-        sleep(500);
+        sleep(800);
         stopMove();
-
-        //lower the lift arm whilst pivoting towards the wall
-        LiftMotor.setPower(.7);
-        move(0.2,1,0, 0);
+        move(.2,1,0,0);
         sleep(200);
         stopMove();
-        sleep(3300);
+
+        //lower the lift arm
+        LiftMotor.setPower(.7);
+        sleep(3500);
         LiftMotor.setPower(0);
 
         //pivot to face vuforia
         move(.3, 0,0,1);
+        int count = 0;
         getPos();
-        while(Math.abs(heading) > 10) {
+        while(Math.abs(heading) > 10 || count < 10000) {
             getPos();
-            if (pos == null) {
+            if (pos.size() == 0) {
                 heading = 100;
             }
             else {
                 heading = pos.get(5);
             }
+            count++;
         }
         stopMove();
 
+        //switches between the 2 autos based on the target shown TODO: MAKE THIS!!!
         getPos();
         if (currentTarget.equals("Front-Craters") || currentTarget.equals("Back-Space")) {
             //Depot Auto
@@ -229,7 +227,7 @@ public class FinalAuto extends LinearOpMode{
         }
         else {
             telemetry.addData("Visible Target", "none");
-            pos = null;
+            pos.clear();
             currentTarget = null;
         }
         telemetry.update();
@@ -256,6 +254,7 @@ public class FinalAuto extends LinearOpMode{
      */
     private void move(double speed, double dx, double dy, double pivot) {
         if (pivot == 0) {
+            dy = -dy;
             float M1 = (float)(dy - dx);
             float M2 = (float)(dy + dx);
             Motor0.setPower((M1) * speed);
@@ -280,6 +279,9 @@ public class FinalAuto extends LinearOpMode{
     }
 
     private void moveTo(int x, int y, int z) {
+
+        final double XmvtSpeed = 0;
+        final double YmvtSpeed = 72;
 
     }
 
