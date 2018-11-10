@@ -13,7 +13,7 @@
  
 #### Arms Controller
 ###### There are 2 types of arms
-###### `Lift Arm` refers to the arm that moves the basket up and down, `Flip Arm` refers to the arm that flips the basket to score in the cache, and `Robot Lift` refers to the arm that lifts the robot off the ground.
+###### `ArmMotor` refers to the arm that moves the basket up and down, `FlipMotor` refers to the arm that flips the basket to score in the cache, and `LiftMotor` refers to the arm that lifts the robot off the ground.
 ##### Entering Arms mode
  Press `Start` + `B` to enter Arms mode
 ###### *Pressing `X` sets the controller to a secondary `Mineral Mode`, Pressing `Y` sets the controller to a secondary `Robot Mode`. After initializing, the controller will be set in `X` mode by default.
