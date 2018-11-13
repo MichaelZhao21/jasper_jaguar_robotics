@@ -14,6 +14,9 @@ public class SkimAutoDepot extends LinearOpMode{
     private DcMotor Motor3;
     private DcMotor LiftMotor;
     private Servo MarkerServo;
+    final private long dy = 36; //28 in/sec
+    final private long dx = 59; //17 in/sec
+    final private long dh = 8; //135 deg/sec
 
     @Override
     public void runOpMode() throws InterruptedException{
@@ -40,7 +43,7 @@ public class SkimAutoDepot extends LinearOpMode{
         move(0.2,0, -1, 0);
         sleep(800);
         stopMove();
-        move(.2,1,0,0);
+        move(.2,-1,0,0);
         sleep(200);
         stopMove();
 
@@ -50,39 +53,31 @@ public class SkimAutoDepot extends LinearOpMode{
         LiftMotor.setPower(0);
 
         //pivot to face wall
-        move(.3, 0,0,1);
-        sleep(1000);
+        move(.8, 0,0,1);
+        sleep(dh * 45);
         stopMove();
 
         //Move to wall
-        move(.8,-1,0,0);
-        sleep(1143);
+        move(.8,1,0,0);
+        sleep(dx * 36);
         stopMove();
 
-        //Move to depot
-        move(.8,0,1,0);
-        sleep(588);
+        //Move to depot, hitting the mineral on the way
+        move(.8,0,-1,0);
+        sleep(dy * 48);
         stopMove();
 
-        //pivot 180 degrees & deposit marker
+        //pivot 90 deg cc and deposit team marker
         move(.8,0,0,1);
-        sleep(1333);
+        sleep(dh * 90);
         stopMove();
         MarkerServo.setPosition(1);
         sleep(100);
 
-        //Move into crater, knocking over a mineral
-        move(.8,0,-1,0);
-        sleep(588);
-        move(.8,-1,0,0);
-        sleep(235);
-        move(.8,0,0,1);
-        sleep(333);
-        move(.8,0,-1,0);
-        sleep(353);
+        //Move forward into crater
+        move(.8,0,1,0);
+        sleep(dx * 108);
         stopMove();
-
-        //TOTAL TIME: 11423 ms
 
     }
 
@@ -97,6 +92,7 @@ public class SkimAutoDepot extends LinearOpMode{
     private void move(double speed, double dx, double dy, double pivot) {
         if (pivot == 0) {
             dy = -dy;
+            dx = -dx;
             float M1 = (float)(dy - dx);
             float M2 = (float)(dy + dx);
             Motor0.setPower((M1) * speed);
