@@ -14,6 +14,9 @@ public class SkimAutoCrater extends LinearOpMode{
     private DcMotor Motor3;
     private DcMotor LiftMotor;
     private Servo MarkerServo;
+    final private long dy = 36; //28 in/sec
+    final private long dx = 59; //17 in/sec
+    final private long dh = 8; //135 deg/sec
 
     @Override
     public void runOpMode() throws InterruptedException{
@@ -51,32 +54,34 @@ public class SkimAutoCrater extends LinearOpMode{
 
         //pivot to face wall
         move(.8, 0,0,1);
-        sleep(1000);
+        sleep(dh * 45);
         stopMove();
 
         //Move to wall
-        move(.8,-1,0,0);
-        sleep(857);
+        move(.8,1,0,0);
+        sleep(dx * 48);
         stopMove();
 
-        //Move to depot, hitting the mineral on the way
+        //Move to depot
         move(.8,0,1,0);
-        sleep(470);
+        sleep(dy * 60);
         stopMove();
 
-        //pivot 90 deg cc and deposit team marker
+        //pivot 180 degrees & deposit marker
         move(.8,0,0,1);
-        sleep(666);
+        sleep(dh * 180);
         stopMove();
         MarkerServo.setPosition(1);
         sleep(100);
 
-        //Move forward into crater
-        move(.8,0,-1,0);
-        sleep(824);
+        //Move into crater, knocking over a mineral
+        move(.8,0,1,0);
+        sleep(dy * 60);
+        move(.8,1,0,0);
+        sleep(dx * 12);
+        move(.8,0,1,0);
+        sleep(dy * 60);
         stopMove();
-
-        //TOTAL TIME: 13167 ms
 
     }
 
@@ -91,6 +96,7 @@ public class SkimAutoCrater extends LinearOpMode{
     private void move(double speed, double dx, double dy, double pivot) {
         if (pivot == 0) {
             dy = -dy;
+            dx = -dx;
             float M1 = (float)(dy - dx);
             float M2 = (float)(dy + dx);
             Motor0.setPower((M1) * speed);
