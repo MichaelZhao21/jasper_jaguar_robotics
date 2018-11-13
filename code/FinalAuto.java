@@ -38,6 +38,7 @@ public class FinalAuto extends LinearOpMode{
     private boolean targetVisible = false;
     private VuforiaLocalizer vuforia;
     private List<VuforiaTrackable> allTrackables;
+    private VuforiaTrackables targetsRoverRuckus;
     private String currentTarget;
     private ArrayList<Float> pos = new ArrayList<Float>();
 
@@ -68,6 +69,8 @@ public class FinalAuto extends LinearOpMode{
 
         waitForStart();
 
+        targetsRoverRuckus.activate();
+
         start();
 
         //land right wheels from lander
@@ -75,7 +78,7 @@ public class FinalAuto extends LinearOpMode{
         sleep(4750);
         LiftMotor.setPower(0);
 
-        //move holding peg away from hook
+        //move holding peg away from hook TODO: Make this faster and calculate the timings
         move(0.2,0, -1, 0);
         sleep(800);
         stopMove();
@@ -84,7 +87,7 @@ public class FinalAuto extends LinearOpMode{
         stopMove();
 
         //lower the lift arm
-        LiftMotor.setPower(.7);
+        LiftMotor.setPower(.7); //TODO: setPower at 1 and lower time ***TRY 2500 ms
         sleep(3500);
         LiftMotor.setPower(0);
 
@@ -109,6 +112,8 @@ public class FinalAuto extends LinearOpMode{
         if (currentTarget.equals("Front-Craters") || currentTarget.equals("Back-Space")) {
             //Depot Auto
 
+            //Moves until fully on the tile along the wall
+            move(.8,0,1,0);
 
         }
         else {
@@ -134,7 +139,7 @@ public class FinalAuto extends LinearOpMode{
 
         vuforia = ClassFactory.getInstance().createVuforia(parameters);
 
-        VuforiaTrackables targetsRoverRuckus = this.vuforia.loadTrackablesFromAsset("RoverRuckus");
+        targetsRoverRuckus = this.vuforia.loadTrackablesFromAsset("RoverRuckus");
         VuforiaTrackable blueRover = targetsRoverRuckus.get(0);
         blueRover.setName("Blue-Rover");
         VuforiaTrackable redFootprint = targetsRoverRuckus.get(1);
@@ -164,9 +169,9 @@ public class FinalAuto extends LinearOpMode{
                 .multiplied(Orientation.getRotationMatrix(EXTRINSIC, XYZ, DEGREES, 90, 0, -90));
         backSpace.setLocation(backSpaceLocationOnField);
 
-        final int CAMERA_FORWARD_DISPLACEMENT  = 110;   // eg: Camera is 110 mm in front of robot center
-        final int CAMERA_VERTICAL_DISPLACEMENT = 200;   // eg: Camera is 200 mm above ground
-        final int CAMERA_LEFT_DISPLACEMENT     = 0;     // eg: Camera is ON the robot's center line
+        final int CAMERA_FORWARD_DISPLACEMENT  = 500;   // eg: Camera is 500 mm in front of robot center TODO: FIX THISSSSSSSSSS ARGHHHHHH
+        final int CAMERA_VERTICAL_DISPLACEMENT = 270;   // eg: Camera is 270 mm above ground
+        final int CAMERA_LEFT_DISPLACEMENT     = -130;     // eg: Camera is -130 mm left of the center
 
         OpenGLMatrix phoneLocationOnRobot = OpenGLMatrix
                 .translation(CAMERA_FORWARD_DISPLACEMENT, CAMERA_LEFT_DISPLACEMENT, CAMERA_VERTICAL_DISPLACEMENT)
@@ -278,10 +283,18 @@ public class FinalAuto extends LinearOpMode{
         move(0,0,0,0);
     }
 
-    private void moveTo(int x, int y, int z) {
+    private void moveTo(int x, int y, int h) {
 
-        final double XmvtSpeed = 0;
-        final double YmvtSpeed = 72;
+        final double XmvtSpeed = 47.619; //21 in/sec
+        final double YmvtSpeed = 19.608; //51 in/sec
+        final double HmvySpeed = 7.407; //135 deg/sec
+        double dx = ((double) pos.get(0)) - x;
+        double dy = ((double) pos.get(1)) - y;
+
+        if (x != 0) {
+            move(.8,(dx > 0 ? 1.0 : -1.0),0,0);
+            sleep((long) (dx * XmvtSpeed));
+        }
 
     }
 
