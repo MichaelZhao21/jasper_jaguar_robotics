@@ -31,7 +31,7 @@ public class SkimAutoDepot extends LinearOpMode{
 
         start();
 
-        //land right wheels from lander
+        //land wheels from lander
         LiftMotor.setPower(-.7);
         sleep(4750);
         LiftMotor.setPower(0);
@@ -54,7 +54,35 @@ public class SkimAutoDepot extends LinearOpMode{
         sleep(1000);
         stopMove();
 
+        //Move to wall
+        move(.8,-1,0,0);
+        sleep(1143);
+        stopMove();
 
+        //Move to depot
+        move(.8,0,1,0);
+        sleep(588);
+        stopMove();
+
+        //pivot 180 degrees & deposit marker
+        move(.8,0,0,1);
+        sleep(1333);
+        stopMove();
+        MarkerServo.setPosition(1);
+        sleep(100);
+
+        //Move into crater, knocking over a mineral
+        move(.8,0,-1,0);
+        sleep(588);
+        move(.8,-1,0,0);
+        sleep(235);
+        move(.8,0,0,1);
+        sleep(333);
+        move(.8,0,-1,0);
+        sleep(353);
+        stopMove();
+
+        //TOTAL TIME: 11423 ms
 
     }
 
