@@ -36,30 +36,34 @@ public class SkimAutoCrater extends LinearOpMode{
 
         //land wheels from lander
         LiftMotor.setPower(-.7);
-        sleep(4750);
+        sleep(6000);
         LiftMotor.setPower(0);
 
         //move holding peg away from hook TODO: Make this faster and calculate the timings
         move(0.2,0, -1, 0);
         sleep(800);
         stopMove();
-        move(.2,1,0,0);
+        move(.2,-1,0,0);
         sleep(200);
         stopMove();
 
         //lower the lift arm
-        LiftMotor.setPower(.7); //TODO: setPower at 1 and lower time ***TRY 2500 ms
-        sleep(3500);
+        LiftMotor.setPower(1); //TODO: setPower at 1 and lower time ***TRY 2500 ms
+        sleep(3000);
         LiftMotor.setPower(0);
 
         //pivot to face wall
         move(.8, 0,0,1);
-        sleep(dh * 45);
+        sleep(dh * 40);
         stopMove();
 
         //Move to wall
-        move(.8,1,0,0);
-        sleep(dx * 48);
+        move(.8,-1,0,0);
+        sleep(dx * 24);
+        move(.8,0,1,0);
+        sleep(dy * 8);
+        move(.8,-1,0,0);
+        sleep(dy * 32);
         stopMove();
 
         //Move to depot
@@ -69,18 +73,17 @@ public class SkimAutoCrater extends LinearOpMode{
 
         //pivot 180 degrees & deposit marker
         move(.8,0,0,1);
-        sleep(dh * 180);
+        sleep(dh * 135);
         stopMove();
+        sleep(500);
         MarkerServo.setPosition(1);
-        sleep(100);
+        sleep(500);
+        move(.8,0,0,1);
+        sleep(dh * 20);
 
         //Move into crater, knocking over a mineral
         move(.8,0,1,0);
-        sleep(dy * 60);
-        move(.8,1,0,0);
-        sleep(dx * 12);
-        move(.8,0,1,0);
-        sleep(dy * 60);
+        sleep(dy * 120);
         stopMove();
 
     }
