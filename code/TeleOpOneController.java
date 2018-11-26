@@ -59,9 +59,9 @@ public class TeleOpOneController extends LinearOpMode{
             //Fast/slow modes
             if (gamepad1.dpad_up) {
                 speed = 0.7;
-			}
-			else if (gamepad1.dpad_left) {
-				speed = 0.5
+            }
+            else if (gamepad1.dpad_left) {
+                speed = 0.5;
             }
             else if (gamepad1.dpad_down) {
                 speed = 0.2;
@@ -78,25 +78,30 @@ public class TeleOpOneController extends LinearOpMode{
             //Switch between
             if (mode == 0) {
                 //Mineral Pickup arm
-				if (gamepad1.right_bumper){
-					if (gamepad1.right_stick_y > 0) {
-						FlipMotor.setPower(gamepad1.right_stick_y * .3); //down
-					}
-					else{
-						FlipMotor.setPower(gamepad1.right_stick_y * .65); //up
-					}
-				}
-				else {
-					if (gamepad1.right_stick_y > 0) {
-						ArmMotor.setPower(0.4); //up
-					}
-					else if (gamepad1.right_stick_y < 0){
-						ArmMotor.setPower(-0.4); //down
-					}
-					else {
-						ArmMotor.setPower(0);
-					}
-				}
+                if (gamepad1.right_bumper){
+                    ArmMotor.setPower(0);
+                    if (gamepad1.right_stick_y > 0) {
+                        FlipMotor.setPower(gamepad1.right_stick_y * .3); //down
+                    }
+                    else if (gamepad1.right_stick_y < 0) {
+                        FlipMotor.setPower(gamepad1.right_stick_y * .65); //up
+                    }
+                    else {
+                        FlipMotor.setPower(0); // stop
+                    }
+                }
+                else {
+                    FlipMotor.setPower(0);
+                    if (gamepad1.right_stick_y > 0) {
+                        ArmMotor.setPower(0.4); //up
+                    }
+                    else if (gamepad1.right_stick_y < 0){
+                        ArmMotor.setPower(-0.4); //down
+                    }
+                    else {
+                        ArmMotor.setPower(0);
+                    }
+                }
 
             }
             else {
