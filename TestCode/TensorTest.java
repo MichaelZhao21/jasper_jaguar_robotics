@@ -64,6 +64,7 @@ public class TensorTest extends LinearOpMode {
                         telemetry.addData("Gold Mineral Position", "Center");
                     }
                 }
+                telemetry.update();
             }
         }
 
