@@ -20,6 +20,7 @@ public class TensorTest extends LinearOpMode {
     private static final String VUFORIA_KEY = "AW43gwP/////AAAAmYhyz/zuEEVHnvzoxHlLyZItf4ilP0/dinBMnTUxXLYeVNLMHQmuS0m+8deBPobAQUB6JXl9rH3l3VC6eJQdYCL7ucXcYRzIaySgu5Edw18foo+xbQpFci4D7t/gEPkx5bkW8OsMCN8oaHnjJfDsm2yuE7YGWzmDs4NRIi929mQxrBk7BFxhDpDV97bGssofJZ16mCAaBgeIj+IUtW2RfZZ9QNOQRs0l0Nlf6vaFtI8/alOhJPjwpQc9ZXmyjF8Yc83mSOKLW8ei3UsYTzrAlZtYeHPiG4FHuGx6t/OCuN5z3V4sw06bvt7Hi9eYa2MivKl8GXlKppNt6kUPHRNFTVz11vboZTYAAAzafNiXyfNj";
     private VuforiaLocalizer vuforia;
     private TFObjectDetector tfod;
+    private int cnt = 0;
 
     @Override
     public void runOpMode() {
@@ -40,34 +41,42 @@ public class TensorTest extends LinearOpMode {
                 tfod.activate();
             }
 
-            List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
-            if (updatedRecognitions != null) {
-                telemetry.addData("I SPY", updatedRecognitions.size());
-                if (updatedRecognitions.size() == 2) {
-                    int goldMineralX = -1;
-                    int silverMineral1X = -1;
-                    int silverMineral2X = -1;
-                    for (Recognition recognition : updatedRecognitions) {
-                        if (recognition.getLabel().equals(LABEL_GOLD_MINERAL)) {
-                            goldMineralX = (int) recognition.getLeft();
-                        } else if (silverMineral1X == -1) {
-                            silverMineral1X = (int) recognition.getLeft();
-                        } else {
-                            silverMineral2X = (int) recognition.getLeft();
-                        }
-                    }
-                    if (goldMineralX == -1) {
-                        telemetry.addData("Gold Mineral Position", "Right");
-                    } else if (goldMineralX < silverMineral1X) {
-                        telemetry.addData("Gold Mineral Position", "Left");
-                    } else {
-                        telemetry.addData("Gold Mineral Position", "Center");
+            getMinerals();
+            cnt++;
+            telemetry.addData("Count", cnt);
+
+        }
+    }
+
+    private String getMinerals() {
+        String side = "None";
+        List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
+        if (updatedRecognitions != null) {
+            telemetry.addData("I SPY", updatedRecognitions.size());
+            if (updatedRecognitions.size() == 2) {
+                int goldMineralX = -1;
+                int silverMineralX = -1;
+                for (Recognition recognition : updatedRecognitions) {
+                    if (recognition.getLabel().equals(LABEL_GOLD_MINERAL)) {
+                        goldMineralX = (int) recognition.getLeft();
+                    } else if (silverMineralX == -1) {
+                        silverMineralX = (int) recognition.getLeft();
                     }
                 }
-                telemetry.update();
+                if (goldMineralX == -1) {
+                    telemetry.addData("Gold Mineral Position", "Right");
+                    side = "Right";
+                } else if (goldMineralX < silverMineralX) {
+                    telemetry.addData("Gold Mineral Position", "Left");
+                    side = "Left";
+                } else {
+                    telemetry.addData("Gold Mineral Position", "Center");
+                    side = "Center";
+                }
             }
+            telemetry.update();
         }
-
+        return side;
     }
 
     /**
