@@ -8,7 +8,7 @@ description: Please call the parts that we use by their correct names
 
 ### Tetrix MAX Channels
 
-These channels are the largest pieces that we have. They are used mostly for the framework of the robot.These pieces are also really good for support and they have a lot of connection points
+These channels are the largest pieces that we have. They are used mostly for the framework of the robot. These pieces are also really good for support and they have a lot of connection points
 
 ![](.gitbook/assets/xl_2232tetrixchannels.jpg)
 
@@ -23,4 +23,3 @@ The flats are good connector pieces. Although there are many long pieces, we typ
 This piece is really good for putting pieces at an angle, but will need tightening VERY often!
 
 ![](.gitbook/assets/xl_41791txmadjstangleflatbracket.jpg)
-
