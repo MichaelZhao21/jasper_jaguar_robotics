@@ -2,4 +2,7 @@
 
 * [Robo Notes!](README.md)
 * [Parts List](parts-list.md)
+* [Coding with Android Studio](coding-with-android-studio.md)
+* [Using Vuforia](using-vuforia.md)
+* [Using TensorFlow](using-tensorflow.md)
 
