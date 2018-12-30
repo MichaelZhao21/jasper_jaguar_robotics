@@ -18,3 +18,5 @@ The flats are good connector pieces. Although there are many long pieces, we typ
 
 ![](.gitbook/assets/xl_39271-39274_tetrixflats.jpg)
 
+#### Tetrix MAX Adjustable Angle Flat Bracket
+
