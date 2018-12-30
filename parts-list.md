@@ -20,7 +20,7 @@ The flats are good connector pieces. Although there are many long pieces, we typ
 
 ### Tetrix MAX Adjustable Angle Flat Bracket
 
-fffgf\
+This piece is really good for putting pieces at an angle, but will need tightening VERY often!
 
 ![](.gitbook/assets/xl_41791txmadjstangleflatbracket.jpg)
 
