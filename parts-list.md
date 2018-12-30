@@ -28,4 +28,4 @@ This piece is really good for putting pieces at an angle, but will need tighteni
 
 This piece is like the angled flat bracket, except that it itself is an L; also requires often tightening.
 
-![](.gitbook\assets\xl_41790txmadjstanglecornerbracket.jpg)
+![](.gitbook/assets/xl_41790txmadjstanglecornerbracket.jpg)
