@@ -227,7 +227,7 @@ while (!detected) {
 //[Things to do after sampling]
 ```
 
-We create a new variable, `side`, to store the side of the gold mineral. The return value of `getMinerals()` is stored, and it is printed via telemetry. Then, the robot runs, until this value is used.
+We create a new variable, `side`, to store the side of the gold mineral. The return value of `getMinerals()` is stored, and it is printed via telemetry. If we do not detect 2 objects, then the loop will continue to run. After that, the robot runs until this value is used.
 
 ```java
 if (side == "Left") {
@@ -296,4 +296,31 @@ if (updatedRecognitions.size() == 2) {
 }
 ```
 
-Next, the method will check if there are exactly 2 minerals that are 
+Next, the method will check if there are exactly 2 minerals that are visible and create 2 variables: `goldMineralX` and `silverMineralX`. These will store the position of the silver and gold minerals. As it loops through the list of objects that it recognizes, it will check the value of the Recognition and get the value, either gold or silver, with the `recognition.getLabel()` method. Then, based on whether or not it's gold, it will store the x-value of the recognition using the `recognition.getLeft()` method in the `goldMineralX` or the `silverMineralX` variable. Then, it will print the 2 values to the phone, for debugging.
+
+```java
+if (goldMineralX == -1) {
+    side = "Right";
+} else if (goldMineralX > silverMineralX) {
+    side = "Left";
+} else {
+    side = "Center";
+}
+detected = true;
+```
+
+The end of the method will set the side of the gold based on this chart:
+
+| Left | Right | Gold Mineral Pos |
+| :-: | :-: | :-: |
+| Silver | Silver |  Right |
+| Silver | Gold | Center |
+| Gold | Silver | Left |
+
+Then, it will set the value of the global variable `detected` to true. This will end the loop that this method is run in, continuing auto.
+
+```java
+return side;
+```
+
+Finally, this method will return the value of `side`, which is either `"Left"`, `"Center"`, or`"Right"`.
