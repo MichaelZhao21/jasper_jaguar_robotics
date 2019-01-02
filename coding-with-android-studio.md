@@ -10,27 +10,19 @@ _\*This can either be really easy or REALLY annoying... Good luck._
 
 1. Start off by going to the [Android Studio Website](https://developer.android.com/studio/) and downloading the installer. Then, follow the instructions to install the program.
 
-   ![](.gitbook/assets/download_android_studio.png)
-
 2. Next, you want to go to the [FTC Github Repository](https://github.com/ftctechnh/ftc_app). Press download ZIP and unzip the file to the place that you want that file to be.
 
-   ![](.gitbook/assets/download_ftc_app.png)
+   ![](https://github.com/dragocat/jasper_jaguar_robotics_2018_19/tree/6fe93ad6683bac4efeae1ec2da1a1d86789f9c95/.gitbook/assets/download_ftc_app.png)
 
 3. Open android studio and press import project.
 
-   ![](.gitbook/assets/import_project.png)
-
 4. Find the gradle project labeled ftc\_app-master; click it and press OK to open the project
-
-   ![](.gitbook/assets/ftc_app-master.png)
 
 5. Wait while the gradle builds the project. You should see this window:
 
-   ![](.gitbook/assets/android_studio_window.png)
-
 6. After the processes at the bottom of the window finish, head over to the left side and open one of the samples.
 
-   ![](.gitbook/assets/tree_view.png)
+   ![](https://github.com/dragocat/jasper_jaguar_robotics_2018_19/tree/6fe93ad6683bac4efeae1ec2da1a1d86789f9c95/.gitbook/assets/tree_view.png)
 
 7. If a lot of the text has red underlines, then close the project and try again. You should see something like this once you open that sample:
 
@@ -38,7 +30,7 @@ _\*This can either be really easy or REALLY annoying... Good luck._
 
 8. Congratulations! You've just installed the FTC app onto Android Studio. Now go to the teamcode folder and start coding!
 
-   ![](.gitbook/assets/start_coding.png)
+   ![](https://github.com/dragocat/jasper_jaguar_robotics_2018_19/tree/6fe93ad6683bac4efeae1ec2da1a1d86789f9c95/.gitbook/assets/start_coding.png)
 
 ## Creating OpModes
 
