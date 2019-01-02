@@ -14,7 +14,7 @@ _\*This can either be really easy or REALLY annoying... Good luck._
 
 2. Next, you want to go to the [FTC Github Repository](https://github.com/ftctechnh/ftc_app). Press download ZIP and unzip the file to the place that you want that file to be.
 
-   ![](https://github.com/dragocat/jasper_jaguar_robotics_2018_19/tree/34430fb611364ecc5b92664ac01abaaea88f493c/.gitbook/assets/download_ftc_app.png)
+   ![](.gitbook/assets/download_ftc_app.png)
 
 3. Open android studio and press import project.
 
@@ -30,15 +30,15 @@ _\*This can either be really easy or REALLY annoying... Good luck._
 
 6. After the processes at the bottom of the window finish, head over to the left side and open one of the samples.
 
-   ![](https://github.com/dragocat/jasper_jaguar_robotics_2018_19/tree/34430fb611364ecc5b92664ac01abaaea88f493c/.gitbook/assets/tree_view.png)
+   ![](.gitbook/assets/tree_view.png)
 
 7. If a lot of the text has red underlines, then close the project and try again. You should see something like this once you open that sample:
 
-   ![](https://github.com/dragocat/jasper_jaguar_robotics_2018_19/tree/34430fb611364ecc5b92664ac01abaaea88f493c/.gitbook/assets/working_example.png)
+   ![](.gitbook/assets/working_example.png)
 
 8. Congratulations! You've just installed the FTC app onto Android Studio. Now go to the teamcode folder and start coding!
 
-   ![](https://github.com/dragocat/jasper_jaguar_robotics_2018_19/tree/34430fb611364ecc5b92664ac01abaaea88f493c/.gitbook/assets/start_coding.png)
+   ![](.gitbook/assets/start_coding.png)
 
 ## Creating OpModes
 
