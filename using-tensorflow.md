@@ -1,6 +1,6 @@
 # Using TensorFlow
 
-This program was used for the 2018-19 Rover Ruckus Game. The code below is written for a auto that only returns the position of the gold blocks. The [] are where the actual running code goes:
+This program was used for the 2018-19 Rover Ruckus Game. The code below is written for a auto that only returns the position of the gold blocks. The \[\] are where the actual running code goes:
 
 ```java
 package org.firstinspires.ftc.teamcode;
@@ -137,7 +137,7 @@ public class TensorAuto extends LinearOpMode{
 }
 ```
 
-### Breakdown
+## Breakdown
 
 ```java
 package org.firstinspires.ftc.teamcode;
@@ -177,7 +177,7 @@ private boolean detected = false;
 //[Hardware variable declarations]
 ```
 
-These public variables will be used by the TensorFlow detection method and will later be put to use. The [Hardware variable declarations] placeholder is where your own declerations for motors, servos, etc. go. (eg. `public DcMotor Motor1;`)
+These public variables will be used by the TensorFlow detection method and will later be put to use. The \[Hardware variable declarations\] placeholder is where your own declerations for motors, servos, etc. go. \(eg. `public DcMotor Motor1;`\)
 
 ```java
 @Override
@@ -200,7 +200,7 @@ if (ClassFactory.getInstance().canCreateTFObjectDetector()) {
 }
 ```
 
-The [hardware initialization] placeholder is where you Initialize the variables using the hardwareMap class (eg. `Motor1 = hardwareMap.dcMotor.get("Motor1");`); The `initVuforia();` statement calls that method (covered later). The 'if' conditional statement at the end makes sure that the phone is compatible with TensorFlow (This is to make sure that it doesn't throw an error). If it is compatible, it will run the `initTfod()` method.
+The \[hardware initialization\] placeholder is where you Initialize the variables using the hardwareMap class \(eg. `Motor1 = hardwareMap.dcMotor.get("Motor1");`\); The `initVuforia();` statement calls that method \(covered later\). The 'if' conditional statement at the end makes sure that the phone is compatible with TensorFlow \(This is to make sure that it doesn't throw an error\). If it is compatible, it will run the `initTfod()` method.
 
 ```java
 waitForStart();
@@ -277,7 +277,7 @@ private String getMinerals() {
 }
 ```
 
-This method will return a String, which is the position of the gold mineral. At the beginning, it initializaes a local variable, also called 'side', which will store the position of the gold mineral. The list that is created holds every object that the TensorFlow algorithm recognizes, in `Recognition` objects. The 'if' conditional makes sure that the list is in a valid state and prints out 'I SPY: [# of objects]' to the phone.
+This method will return a String, which is the position of the gold mineral. At the beginning, it initializaes a local variable, also called 'side', which will store the position of the gold mineral. The list that is created holds every object that the TensorFlow algorithm recognizes, in `Recognition` objects. The 'if' conditional makes sure that the list is in a valid state and prints out 'I SPY: \[\# of objects\]' to the phone.
 
 ```java
 if (updatedRecognitions.size() == 2) {
@@ -312,8 +312,8 @@ detected = true;
 The end of the method will set the side of the gold based on this chart:
 
 | Left | Right | Gold Mineral Pos |
-| :-: | :-: | :-: |
-| Silver | Silver |  Right |
+| :---: | :---: | :---: |
+| Silver | Silver | Right |
 | Silver | Gold | Center |
 | Gold | Silver | Left |
 
@@ -324,3 +324,4 @@ return side;
 ```
 
 Finally, this method will return the value of `side`, which is either `"Left"`, `"Center"`, or`"Right"`.
+
