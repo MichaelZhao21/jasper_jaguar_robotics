@@ -15,6 +15,8 @@ import java.util.List;
 @Autonomous(name="NewAutoTestCRATER")
 public class NewAutoTestCRATER extends LinearOpMode{
 
+    private double time = 0;
+    
     private DcMotor Motor0;
     private DcMotor Motor1;
     private DcMotor Motor2;
@@ -61,17 +63,26 @@ public class NewAutoTestCRATER extends LinearOpMode{
             tfod.activate();
         }
 
+        time = getRuntime();
+
         LiftMotor.setPower(1);
         sleep(1450);
         LiftMotor.setPower(0);
 
         //Move to sampling position
         moveFor(.5,-1,0,0,600);
-        moveFor(.5,0,0,1,850);
+        moveFor(.5,0,0,1,800);
 
         String side = "";
         while (!detected && !isStopRequested() && opModeIsActive()) { //add timed exception
             side = getMinerals();
+            if (getRuntime() - time > 6) {
+                side = "Center";
+                telemetry.addData("Gold Mineral Position", side);
+                telemetry.addData("ERROR", "Could not find mineral");
+                telemetry.update();
+                detected = true;
+            }
         }
 
         tfod.deactivate();
@@ -95,20 +106,30 @@ public class NewAutoTestCRATER extends LinearOpMode{
         //pivot and move to the wall
         moveFor(.5,0,1,0,600);
         moveFor(.5,0,-1,0,600);
-        moveFor(.8,0,0,1,800);
+        
+        if (side == "Right") {
+            moveFor(.5,0,-1,0,100);
+        }
+        
+        moveFor(.8,0,0,1,600);
         
         if (side.equals("Right")) {
-            moveFor(.8,0,1,0,2500);
-        }
-        else if (side.equals("Center")) {
             moveFor(.8,0,1,0,2200);
         }
+        else if (side.equals("Center")) {
+            moveFor(.8,0,1,0,1400);
+        }
         else {
-            moveFor(.8,0,1,0,1100);
+            moveFor(.8,0,1,0,700);
         }
         
         //move to depot
         moveFor(.8,0,0,1,300);
+        
+        if (side == "Left") {
+            moveFor(.8,0,1,0,800);
+        }
+        
         moveFor(.8,0,1,0,1700);
         moveFor(.8,0,0,1,600);
         
@@ -122,7 +143,7 @@ public class NewAutoTestCRATER extends LinearOpMode{
         sleep(1000);
         MarkerServo.setPosition(0);
         
-        moveFor(.8,0,0,1,700);
+        moveFor(.8,0,0,1,600);
         moveFor(.8,0,1,0,2000);
         moveFor(.5,0,1,0,3000);
         
