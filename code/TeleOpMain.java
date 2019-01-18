@@ -87,12 +87,12 @@ public class TeleOpMain extends LinearOpMode{
                     FlipMotor.setPower(gamepad2.right_stick_y * .65); //up
                 }
 
-                ArmMotor.setPower(gamepad2.left_stick_y * .2);
+                ArmMotor.setPower(-gamepad2.left_stick_y * .6);
 
             }
             else {
                 //Robot lifting arm
-                LiftMotor.setPower(gamepad2.left_stick_y * .7);
+                LiftMotor.setPower(-gamepad2.left_stick_y * .7);
             }
 
         }
