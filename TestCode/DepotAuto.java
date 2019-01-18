@@ -12,8 +12,8 @@ import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 
 import java.util.List;
 
-@Autonomous(name="NewAutoTestDEPOT")
-public class NewAutoTestDEPOT extends LinearOpMode{
+@Autonomous(name="DepotAuto")
+public class DepotAuto extends LinearOpMode{
 
     private double time = 0;
     
