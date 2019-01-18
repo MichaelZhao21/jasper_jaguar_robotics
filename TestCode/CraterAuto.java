@@ -12,8 +12,8 @@ import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 
 import java.util.List;
 
-@Autonomous(name="NewAutoTestCRATER")
-public class NewAutoTestCRATER extends LinearOpMode{
+@Autonomous(name="CraterAuto")
+public class CraterAuto extends LinearOpMode{
 
     private double time = 0;
     
@@ -133,6 +133,7 @@ public class NewAutoTestCRATER extends LinearOpMode{
         moveFor(.8,0,1,0,1700);
         moveFor(.8,0,0,1,600);
         
+        //drop team marker
         LiftMotor.setPower(-1);
         ArmMotor.setPower(1);
         sleep(200);
