@@ -93,10 +93,10 @@ public class TeleOpOneController extends LinearOpMode{
                 else {
                     FlipMotor.setPower(0);
                     if (gamepad1.right_stick_y > 0) {
-                        ArmMotor.setPower(0.4); //up
+                        ArmMotor.setPower(-0.4); //up
                     }
                     else if (gamepad1.right_stick_y < 0){
-                        ArmMotor.setPower(-0.4); //down
+                        ArmMotor.setPower(0.4); //down
                     }
                     else {
                         ArmMotor.setPower(0);
@@ -106,7 +106,7 @@ public class TeleOpOneController extends LinearOpMode{
             }
             else {
                 //Robot lifting arm
-                LiftMotor.setPower(gamepad1.right_stick_y * .7);
+                LiftMotor.setPower(-gamepad1.right_stick_y * .7);
             }
 
         }
