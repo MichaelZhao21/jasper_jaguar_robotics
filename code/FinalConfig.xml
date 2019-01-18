@@ -14,7 +14,6 @@
             <TetrixMotor name="ArmMotor" port="1" />
             <RevRobotics40HDHexMotor name="FlipMotor" port="2" />
             <LynxEmbeddedIMU name="imu 1" port="0" bus="0" />
-            <LynxColorSensor name="Picker" port="0" bus="1" />
         </LynxModule>
     </LynxUsbDevice>
 </Robot>
