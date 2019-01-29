@@ -59,29 +59,29 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 @TeleOp(name="TutorialOpMode")
 public class TutorialOpMode extends LinearOpMode{
-    
+
     private DcMotor leftWheel;
     private DcMotor rightWheel;
     private double speed = 0.4;
-    
+
     @Override
     public void runOpMode() throws InterruptedException{
-    
+
         leftWheel = hardwareMap.dcMotor.get("leftWheel");
         rightWheel = hardwareMap.dcMotor.get("rightWheel");
         rightWheel.setDirection(DcMotorSimple.Direction.REVERSE);
-        
+
         waitForStart();
-        
+
         while (opModeIsActive()) {
-            
+
             leftWheel.setPower(gamepad1.left_stick_y * speed);
             rightWheel.setPower(gamepad1.right_stick_y * speed);
-            
+
         }
-        
+
     }
-    
+
 }
 
 ```
@@ -135,7 +135,7 @@ These next 2 lines assign the motor variables values, using the `hardwareMap` cl
 
 ```java
         waitForStart();
-        
+
         while (opModeIsActive()) {
                 //[...]
         }
@@ -150,5 +150,42 @@ The `waitForStart()` waits for the start button to be pressed. Everything you wa
 
 This is the actual code that runs your robot! These 2 lines tell the robot to turn the motors the same power as how far the joystick is pushed forward and multiplied by the speed, which is a percentage. This will control the wheels separately and is the most basic form of control, tank controls.
 
+## Writing an Autonomous
 
+```java
+package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+
+@Autonomous(name="myAuto")
+public class myAuto extends LinearOpMode{
+
+    //[declare variables]
+
+    @Override
+    public void runOpMode() throws InterruptedException{
+
+        //[initialization of variables and setup]
+
+        waitForStart();
+
+        start();
+
+        //[Things to do after pressing play]
+
+    }
+
+}
+```
+
+Explanations:
+
+```java
+package org.firstinspires.ftc.teamcode;
+
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+```
+
+This code, for the most part, should be the same import statements that you include at the beginning of a TeleOp. The only difference is that instead of importing the TeleOp class, you would import the Autonomous class. 
