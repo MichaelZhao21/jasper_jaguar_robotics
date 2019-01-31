@@ -194,23 +194,23 @@ public class NewAutoTestDEPOT extends LinearOpMode {
                 driveMult = FORWARD_COUNTS_PER_INCH;
                 break;
             case BACKWARD:
-                motorSpeeds = Arrays.asList(1,1,1,1);
+                motorSpeeds = Arrays.asList(-1,-1,-1,-1);
                 driveMult = FORWARD_COUNTS_PER_INCH;
                 break;
             case LEFT:
-                motorSpeeds = Arrays.asList(1,1,1,1);
+                motorSpeeds = Arrays.asList(1,-1,1,-1);
                 driveMult = SIDE_COUNTS_PER_INCH;
                 break;
             case RIGHT:
-                motorSpeeds = Arrays.asList(1,1,1,1);
+                motorSpeeds = Arrays.asList(-1,1,-1,1);
                 driveMult = SIDE_COUNTS_PER_INCH;
                 break;
             case CLOCKWISE:
-                motorSpeeds = Arrays.asList(1,1,1,1);
+                motorSpeeds = Arrays.asList(1,-1,-1,1);
                 driveMult = PIVOT_COUNTS_PER_DEGREE;
                 break;
             case COUNTERCLOCKWISE:
-                motorSpeeds = Arrays.asList(1,1,1,1);
+                motorSpeeds = Arrays.asList(-1,1,1,-1);
                 driveMult = PIVOT_COUNTS_PER_DEGREE;
                 break;
             default:
