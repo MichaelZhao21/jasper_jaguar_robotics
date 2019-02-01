@@ -43,13 +43,13 @@ public class NewAutoTestDEPOT extends LinearOpMode {
     private TFObjectDetector tfod;
     private boolean detected = false;
 
-    static final double COUNTS_PER_REV = 560.0;
-    static final double WHEEL_DIAMETER = 4.0;
-    static final double FORWARD_COUNTS_PER_INCH = (COUNTS_PER_REV) / (WHEEL_DIAMETER * 3.1415);
-    static final double SIDE_COUNTS_PER_INCH = 0;
-    static final double PIVOT_COUNTS_PER_DEGREE = 0;
-    static final double SPEED = 0.8;
-    static final double TIMEOUT = 5;
+    private static final double COUNTS_PER_REV = 1120.0;
+    private static final double WHEEL_DIAMETER = 4.0;
+    private static final double FORWARD_COUNTS_PER_INCH = (COUNTS_PER_REV) / (WHEEL_DIAMETER * 3.1415);
+    private static final double SIDE_COUNTS_PER_INCH = FORWARD_COUNTS_PER_INCH * 1.5;
+    private static final double PIVOT_COUNTS_PER_DEGREE = FORWARD_COUNTS_PER_INCH / 4.5;
+    private static final double SPEED = 0.8;
+    private static final double TIMEOUT = 5;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -60,7 +60,8 @@ public class NewAutoTestDEPOT extends LinearOpMode {
         Motor3 = hardwareMap.dcMotor.get("Motor3");
         LiftMotor = hardwareMap.dcMotor.get("LiftMotor");
         ArmMotor = hardwareMap.dcMotor.get("ArmMotor");
-        Motor3.setDirection(DcMotor.Direction.REVERSE);
+        Motor0.setDirection(DcMotor.Direction.REVERSE);
+        Motor1.setDirection(DcMotor.Direction.REVERSE);
         ArmMotor.setDirection(DcMotor.Direction.REVERSE);
         Motor0.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         Motor1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -124,18 +125,19 @@ public class NewAutoTestDEPOT extends LinearOpMode {
         LiftMotor.setPower(0.2);
 
         //Move to pushing position
-        move(Direction.FORWARD,24);
+        move(Direction.CLOCKWISE,90,false);
+        move(Direction.FORWARD,24,false);
 
         //Move in front of the gold
         switch (side) {
             case "Right":
-                move(Direction.RIGHT,9);
+                move(Direction.RIGHT,9,false);
                 break;
             case "Center":
-                move(Direction.LEFT,9);
+                move(Direction.LEFT,9,false);
                 break;
             case "Left":
-                move(Direction.LEFT,24);
+                move(Direction.LEFT,24,false);
                 break;
         }
 
@@ -145,7 +147,7 @@ public class NewAutoTestDEPOT extends LinearOpMode {
                 move(Direction.FORWARD,30);
                 move(Direction.COUNTERCLOCKWISE,45);
                 move(Direction.FORWARD,24);
-                move(Direction.COUNTERCLOCKWISE,180);
+                move(Direction.COUNTERCLOCKWISE,90);
                 break;
             case "Center":
                 move(Direction.FORWARD,48);
@@ -158,9 +160,6 @@ public class NewAutoTestDEPOT extends LinearOpMode {
                 move(Direction.CLOCKWISE,180);
                 break;
         }
-
-        //Stop lift arm
-        LiftMotor.setPower(0);
 
         //Drop Marker!
         MarkerServo.setPosition(1.0);
@@ -182,8 +181,9 @@ public class NewAutoTestDEPOT extends LinearOpMode {
      * Moves the robot using encoder values and omnidirectional pivoting
      * @param direction - the direction to move {FORWARD, BACKWARD, LEFT, RIGHT, CLOCKWISE, COUNTERCLOCKWISE}
      * @param distance - How far to travel in inches or pivot in degrees
+     * @param print - [optional] Will we display telemetry? (true default)
      */
-    public void move(Direction direction, double distance) {
+    public void move(Direction direction, double distance, boolean print) {
 
         List<Integer> motorSpeeds;
         double driveMult;
@@ -198,19 +198,19 @@ public class NewAutoTestDEPOT extends LinearOpMode {
                 driveMult = FORWARD_COUNTS_PER_INCH;
                 break;
             case LEFT:
-                motorSpeeds = Arrays.asList(1,-1,1,-1);
-                driveMult = SIDE_COUNTS_PER_INCH;
-                break;
-            case RIGHT:
                 motorSpeeds = Arrays.asList(-1,1,-1,1);
                 driveMult = SIDE_COUNTS_PER_INCH;
                 break;
+            case RIGHT:
+                motorSpeeds = Arrays.asList(1,-1,1,-1);
+                driveMult = SIDE_COUNTS_PER_INCH;
+                break;
             case CLOCKWISE:
-                motorSpeeds = Arrays.asList(1,-1,-1,1);
+                motorSpeeds = Arrays.asList(1,1,-1,-1);
                 driveMult = PIVOT_COUNTS_PER_DEGREE;
                 break;
             case COUNTERCLOCKWISE:
-                motorSpeeds = Arrays.asList(-1,1,1,-1);
+                motorSpeeds = Arrays.asList(-1,-1,1,1);
                 driveMult = PIVOT_COUNTS_PER_DEGREE;
                 break;
             default:
@@ -231,9 +231,11 @@ public class NewAutoTestDEPOT extends LinearOpMode {
         Motor3.setPower(SPEED);
 
         while (opModeIsActive() && (runtime.seconds() < TIMEOUT && Motor0.isBusy() && Motor1.isBusy() && Motor2.isBusy() && Motor3.isBusy())) {
-            telemetry.addData("Direction",direction.toString());
-            telemetry.addData("Distance",Double.toString(distance));
-            telemetry.update();
+            if (print) {
+                telemetry.addData("Direction",direction.toString());
+                telemetry.addData("Distance",Double.toString(distance));
+                telemetry.update();
+            }
         }
 
         Motor0.setPower(0);
@@ -241,6 +243,15 @@ public class NewAutoTestDEPOT extends LinearOpMode {
         Motor2.setPower(0);
         Motor3.setPower(0);
 
+    }
+
+    /**
+     * Moves the robot using encoder values and omnidirectional pivoting
+     * @param direction - the direction to move {FORWARD, BACKWARD, LEFT, RIGHT, CLOCKWISE, COUNTERCLOCKWISE}
+     * @param distance - How far to travel in inches or pivot in degrees
+     */
+    public void move(Direction direction, double distance) {
+        move(direction, distance, true);
     }
 
     /**
