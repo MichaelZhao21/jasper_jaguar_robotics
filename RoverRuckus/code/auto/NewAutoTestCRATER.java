@@ -105,7 +105,7 @@ public class NewAutoTestCRATER extends LinearOpMode {
 
         //Move to sampling position
         move(Direction.RIGHT,7.5);
-        move(Direction.COUNTERCLOCKWISE,90);
+        move(Direction.COUNTERCLOCKWISE,85);
 
         //Sample!
         runtime.reset();
@@ -125,6 +125,7 @@ public class NewAutoTestCRATER extends LinearOpMode {
         LiftMotor.setPower(0.2);
 
         //Move to pushing position
+        move(Direction.COUNTERCLOCKWISE,5,false);
         move(Direction.CLOCKWISE,90,false);
         move(Direction.FORWARD,24,false);
 
@@ -163,9 +164,6 @@ public class NewAutoTestCRATER extends LinearOpMode {
         move(Direction.FORWARD,60);
         move(Direction.COUNTERCLOCKWISE,90);
 
-        //Stop lift arm
-        LiftMotor.setPower(0);
-
         //Drop Marker! and raise arm
         MarkerServo.setPosition(1.0);
         sleep(1000);
@@ -178,7 +176,7 @@ public class NewAutoTestCRATER extends LinearOpMode {
         move(Direction.FORWARD,102);
 
     }
-    
+
     /**
      * Moves the robot using encoder values and omnidirectional pivoting
      * @param direction - the direction to move {FORWARD, BACKWARD, LEFT, RIGHT, CLOCKWISE, COUNTERCLOCKWISE}
@@ -254,7 +252,7 @@ public class NewAutoTestCRATER extends LinearOpMode {
     public void move(Direction direction, double distance) {
         move(direction, distance, true);
     }
-    
+
     /**
      * Initialize the Vuforia localization engine.
      */
