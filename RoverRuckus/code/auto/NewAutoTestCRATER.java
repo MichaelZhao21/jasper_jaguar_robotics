@@ -48,7 +48,7 @@ public class NewAutoTestCRATER extends LinearOpMode {
     private static final double FORWARD_COUNTS_PER_INCH = (COUNTS_PER_REV) / (WHEEL_DIAMETER * 3.1415);
     private static final double SIDE_COUNTS_PER_INCH = FORWARD_COUNTS_PER_INCH * 1.5;
     private static final double PIVOT_COUNTS_PER_DEGREE = FORWARD_COUNTS_PER_INCH / 4.5;
-    private static final double SPEED = 0.8;
+    private static final double SPEED = 0.6;
     private static final double TIMEOUT = 5;
 
     @Override
@@ -105,7 +105,7 @@ public class NewAutoTestCRATER extends LinearOpMode {
 
         //Move to sampling position
         move(Direction.RIGHT,7.5);
-        move(Direction.COUNTERCLOCKWISE,85);
+        move(Direction.COUNTERCLOCKWISE,90);
 
         //Sample!
         runtime.reset();
@@ -125,7 +125,6 @@ public class NewAutoTestCRATER extends LinearOpMode {
         LiftMotor.setPower(0.2);
 
         //Move to pushing position
-        move(Direction.COUNTERCLOCKWISE,5,false);
         move(Direction.CLOCKWISE,90,false);
         move(Direction.FORWARD,16,false);
 
@@ -135,7 +134,6 @@ public class NewAutoTestCRATER extends LinearOpMode {
                 move(Direction.RIGHT,9,false);
                 break;
             case "Center":
-                move(Direction.LEFT,9,false);
                 break;
             case "Left":
                 move(Direction.LEFT,24,false);
@@ -143,26 +141,26 @@ public class NewAutoTestCRATER extends LinearOpMode {
         }
 
         //Push gold
-        move(Direction.FORWARD,9);
-        move(Direction.BACKWARD,9);
+        move(Direction.FORWARD,18);
+        move(Direction.BACKWARD,18);
         move(Direction.COUNTERCLOCKWISE,90);
 
         //Move to wall
         switch (side) {
             case "Right":
-                move(Direction.FORWARD,60);
+                move(Direction.FORWARD,67);
                 break;
             case "Center":
-                move(Direction.FORWARD,42);
+                move(Direction.FORWARD,50);
                 break;
             case "Left":
-                move(Direction.FORWARD,27);
+                move(Direction.FORWARD,37);
                 break;
         }
 
         //Move to depot and get into marker drop position
         move(Direction.COUNTERCLOCKWISE,45);
-        move(Direction.FORWARD,60);
+        move(Direction.FORWARD,36);
         move(Direction.COUNTERCLOCKWISE,90);
 
         //Drop Marker! and raise arm
