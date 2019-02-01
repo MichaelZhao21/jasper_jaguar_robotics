@@ -127,7 +127,7 @@ public class NewAutoTestCRATER extends LinearOpMode {
         //Move to pushing position
         move(Direction.COUNTERCLOCKWISE,5,false);
         move(Direction.CLOCKWISE,90,false);
-        move(Direction.FORWARD,24,false);
+        move(Direction.FORWARD,16,false);
 
         //Move in front of the gold
         switch (side) {
@@ -145,6 +145,7 @@ public class NewAutoTestCRATER extends LinearOpMode {
         //Push gold
         move(Direction.FORWARD,9);
         move(Direction.BACKWARD,9);
+        move(Direction.COUNTERCLOCKWISE,90);
 
         //Move to wall
         switch (side) {
