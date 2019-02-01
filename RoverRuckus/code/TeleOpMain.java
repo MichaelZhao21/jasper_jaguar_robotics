@@ -14,9 +14,9 @@ public class TeleOpMain extends LinearOpMode{
     private DcMotor LiftMotor;
     private DcMotor ArmMotor;
     private DcMotor FlipMotor;
-    private final double SLOW = .2;
-    private final double NORMAL = .5;
-    private final double FAST = 1;
+    private final double SLOW = 0.2;
+    private final double NORMAL = 0.5;
+    private final double FAST = 0.8;
 
     @Override
     public void runOpMode() throws InterruptedException{
@@ -27,10 +27,19 @@ public class TeleOpMain extends LinearOpMode{
         Motor1 = hardwareMap.dcMotor.get("Motor1");
         Motor2 = hardwareMap.dcMotor.get("Motor2");
         Motor3 = hardwareMap.dcMotor.get("Motor3");
-        Motor3.setDirection(DcMotor.Direction.REVERSE);
+        Motor0.setDirection(DcMotor.Direction.REVERSE);
+        Motor1.setDirection(DcMotor.Direction.REVERSE);
         LiftMotor = hardwareMap.dcMotor.get("LiftMotor");
         ArmMotor = hardwareMap.dcMotor.get("ArmMotor");
         FlipMotor = hardwareMap.dcMotor.get("FlipMotor");
+        Motor0.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        Motor1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        Motor2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        Motor3.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        Motor0.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        Motor1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        Motor2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        Motor3.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         waitForStart();
 
@@ -58,14 +67,14 @@ public class TeleOpMain extends LinearOpMode{
 
             }
 
-            //Fast/slow modes
+            //Speed modes
             if (gamepad1.dpad_up) {
                 speed = FAST;
             }
             else if (gamepad1.dpad_down) {
                 speed = SLOW;
             }
-            else if (gamepad1.dpad_left) {
+            else if (gamepad1.dpad_left || gamepad1.dpad_right) {
                 speed = NORMAL;
             }
 
