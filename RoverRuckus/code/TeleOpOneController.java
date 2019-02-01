@@ -3,7 +3,6 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 @TeleOp(name="TeleOpOneController")
 public class TeleOpOneController extends LinearOpMode{
@@ -15,20 +14,32 @@ public class TeleOpOneController extends LinearOpMode{
     private DcMotor LiftMotor;
     private DcMotor ArmMotor;
     private DcMotor FlipMotor;
+    private final double SLOW = 0.2;
+    private final double NORMAL = 0.5;
+    private final double FAST = 0.8;
 
     @Override
     public void runOpMode() throws InterruptedException{
 
         int mode = 0; //0(x): Pickup Minerals, 1(y): Lift Robot
-        double speed = 0.5;
+        double speed = NORMAL;
         Motor0 = hardwareMap.dcMotor.get("Motor0");
         Motor1 = hardwareMap.dcMotor.get("Motor1");
         Motor2 = hardwareMap.dcMotor.get("Motor2");
         Motor3 = hardwareMap.dcMotor.get("Motor3");
-        Motor3.setDirection(DcMotor.Direction.REVERSE);
+        Motor0.setDirection(DcMotor.Direction.REVERSE);
+        Motor1.setDirection(DcMotor.Direction.REVERSE);
         LiftMotor = hardwareMap.dcMotor.get("LiftMotor");
         ArmMotor = hardwareMap.dcMotor.get("ArmMotor");
         FlipMotor = hardwareMap.dcMotor.get("FlipMotor");
+        Motor0.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        Motor1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        Motor2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        Motor3.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        Motor0.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        Motor1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        Motor2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        Motor3.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         waitForStart();
 
@@ -56,57 +67,40 @@ public class TeleOpOneController extends LinearOpMode{
 
             }
 
-            //Fast/slow modes
+            //Speed modes
             if (gamepad1.dpad_up) {
-                speed = 0.7;
-            }
-            else if (gamepad1.dpad_left) {
-                speed = 0.5;
+                speed = FAST;
             }
             else if (gamepad1.dpad_down) {
-                speed = 0.2;
+                speed = SLOW;
+            }
+            else if (gamepad1.dpad_left || gamepad1.dpad_right) {
+                speed = NORMAL;
             }
 
             //change arm mode bw Lifting Arm and Mineral Pickup Arm
-            if (gamepad1.x) {
+            if (gamepad2.x) {
                 mode = 0;
             }
-            else if (gamepad1.y) {
+            else if (gamepad2.y) {
                 mode = 1;
             }
 
             //Switch between
             if (mode == 0) {
-                //Mineral Pickup arm
+                //Mineral Pickup arm and flip arm
                 if (gamepad1.right_bumper){
                     ArmMotor.setPower(0);
-                    if (gamepad1.right_stick_y > 0) {
-                        FlipMotor.setPower(gamepad1.right_stick_y * .3); //down
-                    }
-                    else if (gamepad1.right_stick_y < 0) {
-                        FlipMotor.setPower(gamepad1.right_stick_y * .65); //up
-                    }
-                    else {
-                        FlipMotor.setPower(0); // stop
-                    }
+                    FlipMotor.setPower(gamepad1.right_stick_y * .3);
                 }
                 else {
                     FlipMotor.setPower(0);
-                    if (gamepad1.right_stick_y > 0) {
-                        ArmMotor.setPower(-0.4); //up
-                    }
-                    else if (gamepad1.right_stick_y < 0){
-                        ArmMotor.setPower(0.4); //down
-                    }
-                    else {
-                        ArmMotor.setPower(0);
-                    }
+                    ArmMotor.setPower(gamepad1.right_stick_x * .4);
                 }
-
             }
             else {
                 //Robot lifting arm
-                LiftMotor.setPower(-gamepad1.right_stick_y * .7);
+                LiftMotor.setPower(-gamepad2.left_stick_y * .7);
             }
 
         }
