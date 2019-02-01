@@ -43,11 +43,11 @@ public class NewAutoTestCRATER extends LinearOpMode {
     private TFObjectDetector tfod;
     private boolean detected = false;
 
-    static final double COUNTS_PER_REV = 560.0;
+    static final double COUNTS_PER_REV = 1120.0;
     static final double WHEEL_DIAMETER = 4.0;
     static final double FORWARD_COUNTS_PER_INCH = (COUNTS_PER_REV) / (WHEEL_DIAMETER * 3.1415);
-    static final double SIDE_COUNTS_PER_INCH = 0;
-    static final double PIVOT_COUNTS_PER_DEGREE = 0;
+    static final double SIDE_COUNTS_PER_INCH = FORWARD_COUNTS_PER_INCH * 1.5;
+    static final double PIVOT_COUNTS_PER_DEGREE = FORWARD_COUNTS_PER_INCH / 4.5;
     static final double SPEED = 0.8;
     static final double TIMEOUT = 5;
 
@@ -60,7 +60,8 @@ public class NewAutoTestCRATER extends LinearOpMode {
         Motor3 = hardwareMap.dcMotor.get("Motor3");
         LiftMotor = hardwareMap.dcMotor.get("LiftMotor");
         ArmMotor = hardwareMap.dcMotor.get("ArmMotor");
-        Motor3.setDirection(DcMotor.Direction.REVERSE);
+        Motor0.setDirection(DcMotor.Direction.REVERSE);
+        Motor1.setDirection(DcMotor.Direction.REVERSE);
         ArmMotor.setDirection(DcMotor.Direction.REVERSE);
         Motor0.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         Motor1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -124,6 +125,7 @@ public class NewAutoTestCRATER extends LinearOpMode {
         LiftMotor.setPower(0.2);
 
         //Move to pushing position
+        move(Direction.CLOCKWISE,90);
         move(Direction.FORWARD,24);
 
         //Move in front of the gold
@@ -198,19 +200,19 @@ public class NewAutoTestCRATER extends LinearOpMode {
                 driveMult = FORWARD_COUNTS_PER_INCH;
                 break;
             case LEFT:
-                motorSpeeds = Arrays.asList(1,-1,1,-1);
-                driveMult = SIDE_COUNTS_PER_INCH;
-                break;
-            case RIGHT:
                 motorSpeeds = Arrays.asList(-1,1,-1,1);
                 driveMult = SIDE_COUNTS_PER_INCH;
                 break;
+            case RIGHT:
+                motorSpeeds = Arrays.asList(1,-1,1,-1);
+                driveMult = SIDE_COUNTS_PER_INCH;
+                break;
             case CLOCKWISE:
-                motorSpeeds = Arrays.asList(1,-1,-1,1);
+                motorSpeeds = Arrays.asList(1,1,-1,-1);
                 driveMult = PIVOT_COUNTS_PER_DEGREE;
                 break;
             case COUNTERCLOCKWISE:
-                motorSpeeds = Arrays.asList(-1,1,1,-1);
+                motorSpeeds = Arrays.asList(-1,-1,1,1);
                 driveMult = PIVOT_COUNTS_PER_DEGREE;
                 break;
             default:
