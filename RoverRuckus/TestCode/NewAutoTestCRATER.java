@@ -43,13 +43,13 @@ public class NewAutoTestCRATER extends LinearOpMode {
     private TFObjectDetector tfod;
     private boolean detected = false;
 
-    static final double COUNTS_PER_REV = 1120.0;
-    static final double WHEEL_DIAMETER = 4.0;
-    static final double FORWARD_COUNTS_PER_INCH = (COUNTS_PER_REV) / (WHEEL_DIAMETER * 3.1415);
-    static final double SIDE_COUNTS_PER_INCH = FORWARD_COUNTS_PER_INCH * 1.5;
-    static final double PIVOT_COUNTS_PER_DEGREE = FORWARD_COUNTS_PER_INCH / 4.5;
-    static final double SPEED = 0.8;
-    static final double TIMEOUT = 5;
+    private static final double COUNTS_PER_REV = 1120.0;
+    private static final double WHEEL_DIAMETER = 4.0;
+    private static final double FORWARD_COUNTS_PER_INCH = (COUNTS_PER_REV) / (WHEEL_DIAMETER * 3.1415);
+    private static final double SIDE_COUNTS_PER_INCH = FORWARD_COUNTS_PER_INCH * 1.5;
+    private static final double PIVOT_COUNTS_PER_DEGREE = FORWARD_COUNTS_PER_INCH / 4.5;
+    private static final double SPEED = 0.8;
+    private static final double TIMEOUT = 5;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -125,23 +125,23 @@ public class NewAutoTestCRATER extends LinearOpMode {
         LiftMotor.setPower(0.2);
 
         //Move to pushing position
-        move(Direction.CLOCKWISE,90);
-        move(Direction.FORWARD,24);
+        move(Direction.CLOCKWISE,90,false);
+        move(Direction.FORWARD,24,false);
 
         //Move in front of the gold
         switch (side) {
             case "Right":
-                move(Direction.RIGHT,9);
+                move(Direction.RIGHT,9,false);
                 break;
             case "Center":
-                move(Direction.LEFT,9);
+                move(Direction.LEFT,9,false);
                 break;
             case "Left":
-                move(Direction.LEFT,24);
+                move(Direction.LEFT,24,false);
                 break;
         }
 
-        //Push gold **THIS IS WHERE CRATER/DEPOT DIVERGES**
+        //Push gold
         move(Direction.FORWARD,9);
         move(Direction.BACKWARD,9);
 
@@ -166,26 +166,26 @@ public class NewAutoTestCRATER extends LinearOpMode {
         //Stop lift arm
         LiftMotor.setPower(0);
 
-        //Drop Marker!
+        //Drop Marker! and raise arm
         MarkerServo.setPosition(1.0);
         sleep(1000);
         MarkerServo.setPosition(0);
+        ArmMotor.setTargetPosition(2000);
+        ArmMotor.setPower(1.0);
 
         //Move to the crater
         move(Direction.COUNTERCLOCKWISE,90);
         move(Direction.FORWARD,102);
 
-        //Stop basket
-        ArmMotor.setPower(0);
-
     }
-
+    
     /**
      * Moves the robot using encoder values and omnidirectional pivoting
      * @param direction - the direction to move {FORWARD, BACKWARD, LEFT, RIGHT, CLOCKWISE, COUNTERCLOCKWISE}
      * @param distance - How far to travel in inches or pivot in degrees
+     * @param print - Will we display telemetry?
      */
-    public void move(Direction direction, double distance) {
+    public void move(Direction direction, double distance, boolean print) {
 
         List<Integer> motorSpeeds;
         double driveMult;
@@ -233,9 +233,11 @@ public class NewAutoTestCRATER extends LinearOpMode {
         Motor3.setPower(SPEED);
 
         while (opModeIsActive() && (runtime.seconds() < TIMEOUT && Motor0.isBusy() && Motor1.isBusy() && Motor2.isBusy() && Motor3.isBusy())) {
-            telemetry.addData("Direction",direction.toString());
-            telemetry.addData("Distance",Double.toString(distance));
-            telemetry.update();
+            if (print) {
+                telemetry.addData("Direction",direction.toString());
+                telemetry.addData("Distance",Double.toString(distance));
+                telemetry.update();
+            }
         }
 
         Motor0.setPower(0);
@@ -245,6 +247,14 @@ public class NewAutoTestCRATER extends LinearOpMode {
 
     }
 
+    /**
+     * Same as move(Direction direction, double distance, boolean print)
+     * but print is true
+     */
+    public void move(Direction direction, double distance) {
+        move(direction, distance, true);
+    }
+    
     /**
      * Initialize the Vuforia localization engine.
      */
