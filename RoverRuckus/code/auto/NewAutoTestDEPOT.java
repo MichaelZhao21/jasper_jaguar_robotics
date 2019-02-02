@@ -42,13 +42,14 @@ public class NewAutoTestDEPOT extends LinearOpMode {
     private VuforiaLocalizer vuforia;
     private TFObjectDetector tfod;
     private boolean detected = false;
+    private boolean uhoh = false;
 
     private static final double COUNTS_PER_REV = 1120.0;
     private static final double WHEEL_DIAMETER = 4.0;
     private static final double FORWARD_COUNTS_PER_INCH = (COUNTS_PER_REV) / (WHEEL_DIAMETER * 3.1415);
     private static final double SIDE_COUNTS_PER_INCH = FORWARD_COUNTS_PER_INCH * 1.5;
     private static final double PIVOT_COUNTS_PER_DEGREE = FORWARD_COUNTS_PER_INCH / 4.5;
-    private static final double SPEED = 0.8;
+    private static final double SPEED = 0.5;
     private static final double TIMEOUT = 5;
 
     @Override
@@ -88,13 +89,13 @@ public class NewAutoTestDEPOT extends LinearOpMode {
         waitForStart();
 
         start();
-
+        
         if (tfod != null) {
             tfod.activate();
         }
 
         //Land
-        LiftMotor.setTargetPosition(4000);
+        LiftMotor.setTargetPosition(4100);
         LiftMotor.setPower(1.0);
         while(opModeIsActive() && LiftMotor.isBusy()) {
             telemetry.addData("LiftMotor","RAISING");
@@ -104,19 +105,25 @@ public class NewAutoTestDEPOT extends LinearOpMode {
         LiftMotor.setPower(0);
 
         //Move to sampling position
-        move(Direction.RIGHT,7.5);
-        move(Direction.COUNTERCLOCKWISE,90);
+        move(Direction.COUNTERCLOCKWISE,10);
+        move(Direction.RIGHT,6.5);
+        move(Direction.COUNTERCLOCKWISE,100);
+        move(Direction.RIGHT,1);
 
         //Sample!
         runtime.reset();
         while (!detected && !isStopRequested() && opModeIsActive()) {
             side = getMinerals();
-            if (runtime.seconds() > 3) {
+            if (runtime.seconds() > 4) {
                 side = "Center";
                 telemetry.addData("Gold Mineral Position", side);
                 telemetry.addData("ERROR", "Could not find mineral");
                 telemetry.update();
                 detected = true;
+            }
+            else if (runtime.seconds() > 2 && !uhoh) {
+                move(Direction.COUNTERCLOCKWISE,10,false);
+                uhoh = true;
             }
         }
 
@@ -125,8 +132,13 @@ public class NewAutoTestDEPOT extends LinearOpMode {
         LiftMotor.setPower(0.2);
 
         //Move to pushing position
+        if (uhoh) {
+            move(Direction.CLOCKWISE,10,false);
+        }
+        move(Direction.LEFT,2,false);
         move(Direction.CLOCKWISE,90,false);
-        move(Direction.FORWARD,24,false);
+        move(Direction.FORWARD,16,false);
+        move(Direction.CLOCKWISE,20,false);
 
         //Move in front of the gold
         switch (side) {
@@ -134,46 +146,48 @@ public class NewAutoTestDEPOT extends LinearOpMode {
                 move(Direction.RIGHT,9,false);
                 break;
             case "Center":
-                move(Direction.LEFT,9,false);
+                move(Direction.LEFT,4,false);
                 break;
             case "Left":
-                move(Direction.LEFT,24,false);
+                move(Direction.LEFT,16,false);
                 break;
         }
-
         //Push gold and get into marker drop position
         switch (side) {
             case "Right":
                 move(Direction.FORWARD,30);
                 move(Direction.COUNTERCLOCKWISE,45);
                 move(Direction.FORWARD,24);
-                move(Direction.COUNTERCLOCKWISE,90);
                 break;
             case "Center":
-                move(Direction.FORWARD,48);
-                move(Direction.COUNTERCLOCKWISE,135);
+                move(Direction.FORWARD,40);
+                move(Direction.COUNTERCLOCKWISE,45);
+                move(Direction.FORWARD,4);
                 break;
             case "Left":
                 move(Direction.FORWARD,30);
                 move(Direction.CLOCKWISE,45);
                 move(Direction.FORWARD,24);
-                move(Direction.CLOCKWISE,180);
+                move(Direction.COUNTERCLOCKWISE,90);
                 break;
         }
+        move(Direction.LEFT,6);
 
-        //Drop Marker!
+        //Drop Marker! and raise arm
         MarkerServo.setPosition(1.0);
         sleep(1000);
         MarkerServo.setPosition(0);
-
-        //Move to the crater and lift basket
-        ArmMotor.setTargetPosition(2000);
+        ArmMotor.setTargetPosition(600);
         ArmMotor.setPower(1.0);
-        move(Direction.COUNTERCLOCKWISE,90);
-        move(Direction.FORWARD,102);
 
-        //Stop basket
-        ArmMotor.setPower(0);
+        //Move to the crater
+        move(Direction.LEFT,6);
+        if (side == "Center") {
+            move(Direction.FORWARD,14);
+        }
+        move(Direction.CLOCKWISE,95);
+        move(Direction.BACKWARD,65);
+        move(Direction.BACKWARD,28,0.4);
 
     }
 
@@ -181,9 +195,9 @@ public class NewAutoTestDEPOT extends LinearOpMode {
      * Moves the robot using encoder values and omnidirectional pivoting
      * @param direction - the direction to move {FORWARD, BACKWARD, LEFT, RIGHT, CLOCKWISE, COUNTERCLOCKWISE}
      * @param distance - How far to travel in inches or pivot in degrees
-     * @param print - [optional] Will we display telemetry? (true default)
+     * @param print - Will we display telemetry?
      */
-    public void move(Direction direction, double distance, boolean print) {
+    public void move(Direction direction, double distance, boolean print, double nSpeed) {
 
         List<Integer> motorSpeeds;
         double driveMult;
@@ -225,10 +239,14 @@ public class NewAutoTestDEPOT extends LinearOpMode {
         Motor3.setTargetPosition(Motor3.getCurrentPosition() + (int) (motorSpeeds.get(3) * distance * driveMult));
 
         runtime.reset();
-        Motor0.setPower(SPEED);
-        Motor1.setPower(SPEED);
-        Motor2.setPower(SPEED);
-        Motor3.setPower(SPEED);
+        
+        if (nSpeed == 0) {
+            nSpeed = SPEED;
+        }
+        Motor0.setPower(nSpeed);
+        Motor1.setPower(nSpeed);
+        Motor2.setPower(nSpeed);
+        Motor3.setPower(nSpeed);
 
         while (opModeIsActive() && (runtime.seconds() < TIMEOUT && Motor0.isBusy() && Motor1.isBusy() && Motor2.isBusy() && Motor3.isBusy())) {
             if (print) {
@@ -246,12 +264,19 @@ public class NewAutoTestDEPOT extends LinearOpMode {
     }
 
     /**
-     * Moves the robot using encoder values and omnidirectional pivoting
-     * @param direction - the direction to move {FORWARD, BACKWARD, LEFT, RIGHT, CLOCKWISE, COUNTERCLOCKWISE}
-     * @param distance - How far to travel in inches or pivot in degrees
+     * Same as move(Direction direction, double distance, boolean print)
+     * but print is true
      */
     public void move(Direction direction, double distance) {
-        move(direction, distance, true);
+        move(direction, distance, true, 0);
+    }
+    
+    public void move(Direction direction, double distance, double nSpeed) {
+        move(direction, distance, true, nSpeed);
+    }
+    
+    public void move(Direction direction, double distance, boolean print) {
+        move(direction, distance, print, 0);
     }
 
     /**
@@ -301,11 +326,11 @@ public class NewAutoTestDEPOT extends LinearOpMode {
                 telemetry.addData("GoldX", goldMineralX);
                 telemetry.addData("SilverX", silverMineralX);
                 if (goldMineralX == -1) {
-                    side = "Left";
+                    side = "Right";
                 } else if (goldMineralX < silverMineralX) {
                     side = "Center";
                 } else {
-                    side = "Right";
+                    side = "Left";
                 }
                 detected = true;
                 telemetry.addData("Gold Mineral Position", side);
