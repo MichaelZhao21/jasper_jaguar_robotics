@@ -83,7 +83,6 @@ public class TutorialOpMode extends LinearOpMode{
     }
 
 }
-
 ```
 
 Explanations:
@@ -188,4 +187,5 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 ```
 
-This code, for the most part, should be the same import statements that you include at the beginning of a TeleOp. The only difference is that instead of importing the TeleOp class, you would import the Autonomous class. 
+This code, for the most part, should be the same import statements that you include at the beginning of a TeleOp. The only difference is that instead of importing the TeleOp class, you would import the Autonomous class.
+
