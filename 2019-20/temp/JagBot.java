@@ -12,6 +12,10 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
+/**
+ * An object that initializes and contains methods that can be used to
+ * run the robot. This was created for the Jasper Jaguar Robotics FTC Team 11419.
+ */
 public class JagBot {
 
     private DcMotor frontLeft;
@@ -23,7 +27,32 @@ public class JagBot {
     private Orientation angles;
     private Acceleration gravity;
 
-    public void init(HardwareMap hardwareMap) {
+    private Telemetry telemetry;
+    private HardwareMap hardwareMap;
+
+    private boolean auto;
+
+    /**
+     * Gets a few of the OpMode objects and sets a flag for
+     * whether or not this is used for an autonomous opmode
+     *
+     * @param telemetry Telemetry object
+     * @param hardwareMap HardwareMap object
+     * @param auto Is this an autonomous?
+     */
+    public JagBot(Telemetry telemetry,
+                  HardwareMap hardwareMap,
+                  boolean auto) {
+        this.telemetry = telemetry;
+        this.hardwareMap = hardwareMap;
+        this.auto = auto;
+    }
+
+    /**
+     * Initiates the robot object using hardwareMap
+     * This needs to be done before waitForStart();
+     */
+    public void init() {
 
         frontLeft = hardwareMap.dcMotor.get("frontLeft");
         frontRight = hardwareMap.dcMotor.get("frontRight");
@@ -35,10 +64,12 @@ public class JagBot {
         backLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         backRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        frontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        frontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        if (auto) {
+            initAuto();
+        }
+        else {
+            initTeleOp();
+        }
 
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
         parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
@@ -52,8 +83,22 @@ public class JagBot {
 
     }
 
+    private void initAuto() {
+        frontLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        frontRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        backLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        backRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+    }
+
+    private void initTeleOp() {
+        frontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        frontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+    }
+
     /**
-     * Move Robot with controller
+     * Move Robot with controller input values
      * @param dx left/right
      * @param dy forward/backward
      * @param ds pivot
@@ -65,7 +110,10 @@ public class JagBot {
         backRight.setPower(dy - dx - ds);
     }
 
-    public void getAngle(Telemetry telemetry) {
+    /**
+     * Returns the current heading that the robot is facing
+     */
+    public void getAngle() {
         angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
         telemetry.addData("Angular Rotation", angles);
     }
